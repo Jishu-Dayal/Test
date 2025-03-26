@@ -1,237 +1,217 @@
----
-
-```markdown
-# Real-Time Chat Application with Speech-to-Text and Face Matching
+Real-Time Chat Application with Speech-to-Text and Face Matching
 
 A full-stack real-time chat application that provides secure authentication using face recognition, real-time messaging with WebSockets, group chat management, and integrated speech-to-text functionality. This application leverages AWS Rekognition for face matching and Google Speech-to-Text API for audio transcription.
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture & Tech Stack](#architecture--tech-stack)
-- [Installation & Setup](#installation--setup)
-- [Environment Variables](#environment-variables)
-- [Usage](#usage)
-- [WebSocket Server Details](#websocket-server-details)
-- [API Endpoints & Routes](#api-endpoints--routes)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
-## Overview
+Table of Contents
+Overview
+Features
+Architecture & Tech Stack
+Installation & Setup
+Environment Variables
+Usage
+WebSocket Server Details
+API Endpoints & Routes
+Deployment
+Contributing
+License
+Contact
+Overview
 
 This application is designed to provide a secure and interactive chatting experience. Users register by creating an account (name, email, and password) and are prompted to capture a selfie using their webcam. This image is processed with AWS Rekognition and securely stored as part of the user's profile. During subsequent logins, users must verify their identity with a live selfie. Once authenticated, users can create or join chat groups, invite others via email, and communicate using both text and voice (with real-time speech-to-text conversion using the Google Speech-to-Text API).
 
-## Features
+Features
 
-- **User Authentication with Face Matching:**  
-  - Sign-up with name, email, password, and selfie registration.
-  - Login requires both traditional credentials and a real-time facial verification.
-  - Integration with AWS Rekognition for secure face matching.
+User Authentication with Face Matching:
 
-- **Chat Rooms & Messaging:**  
-  - Create chat rooms and invite members.
-  - Real-time messaging using WebSockets (Socket.IO).
-  - Persistent message storage using Redis to maintain conversation history.
+Sign-up with name, email, password, and selfie registration
+Login requires both traditional credentials and a real-time facial verification
+Integration with AWS Rekognition for secure face matching
 
-- **Speech-to-Text Integration:**  
-  - Record audio messages that are transcribed to text using the Google Speech-to-Text API.
-  - Option to review and edit transcriptions before sending.
+Chat Rooms & Messaging:
 
-- **Real-Time Communication:**  
-  - WebSocket server handles three main events: user identification, room joining, and chat messaging.
-  - Instant broadcasting of messages to all room participants.
+Create chat rooms and invite members
+Real-time messaging using WebSockets (Socket.IO)
+Persistent message storage using Redis to maintain conversation history
 
-## Architecture & Tech Stack
+Speech-to-Text Integration:
 
-- **Frontend:**  
-  - Next.js for UI rendering and API routes.
-  - Webcam integration for capturing selfies during sign-up and login.
-  - Chat UI with text and speech-to-text capabilities.
+Record audio messages that are transcribed to text using the Google Speech-to-Text API
+Option to review and edit transcriptions before sending
 
-- **Backend:**  
-  - Next.js API routes for handling authentication, face matching, chat room management, and message storage.
-  - Node.js server for real-time communication using WebSockets.
-  - Redis for persistent session and message storage.
-  
-- **Third-Party Integrations:**  
-  - **AWS Rekognition:** Face recognition and matching.
-  - **Google Speech-to-Text API:** Converting recorded audio into text.
+Real-Time Communication:
 
-- **Deployment:**  
-  - Vercel for front-end deployment.
-  - Environment variables securely managed through platform-specific settings.
+WebSocket server handles three main events: user identification, room joining, and chat messaging
+Instant broadcasting of messages to all room participants
+Architecture & Tech Stack
 
-## Installation & Setup
+Frontend:
 
-### Prerequisites
+Next.js for UI rendering and API routes
+Webcam integration for capturing selfies during sign-up and login
+Chat UI with text and speech-to-text capabilities
 
-- Node.js (v14+)
-- npm or yarn
-- Redis instance (local or hosted)
-- AWS account with Rekognition permissions
-- Google Cloud account with Speech-to-Text API enabled
+Backend:
 
-### Steps
+Next.js API routes for handling authentication, face matching, chat room management, and message storage
+Node.js server for real-time communication using WebSockets
+Redis for persistent session and message storage
 
-1. **Clone the Repository:**
+Third-Party Integrations:
 
-   ```bash
-   git clone https://github.com/yourusername/your-chat-app.git
-   cd your-chat-app
-   ```
+AWS Rekognition: Face recognition and matching
+Google Speech-to-Text API: Converting recorded audio into text
 
-2. **Install Dependencies:**
+Deployment:
 
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+Vercel for front-end deployment
+Environment variables securely managed through platform-specific settings
+Installation & Setup
+Prerequisites
+Node.js (v14+)
+npm or yarn
+Redis instance (local or hosted)
+AWS account with Rekognition permissions
+Google Cloud account with Speech-to-Text API enabled
+Steps
 
-3. **Configure Environment Variables:**
+Clone the Repository:
 
-   Create a `.env` file in the root directory and add:
+git clone https://github.com/yourusername/your-chat-app.git
+cd your-chat-app
 
-   ```env
-   # Redis configuration
-   REDIS_URL=your_redis_connection_url
 
-   # WebSocket Server Port
-   WS_PORT=8080
+Install Dependencies:
 
-   # AWS Credentials
-   AWS_ACCESS_KEY_ID=your_aws_access_key
-   AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-   AWS_REGION=your_aws_region
+npm install
+# or
+yarn install
 
-   # Google Speech-to-Text API Key
-   GOOGLE_SPEECH_API_KEY=your_google_api_key
 
-   # Additional configurations as needed...
-   ```
+Configure Environment Variables:
 
-4. **Start the Application:**
+Create a .env file in the root directory and add:
 
-   - **For Development:**
-     ```bash
-     npm run dev
-     # or
-     yarn dev
-     ```
+# Redis configuration
+REDIS_URL=your_redis_connection_url
 
-   - **For Production Build:**
-     ```bash
-     npm run build
-     npm start
-     # or equivalent yarn commands
-     ```
+# WebSocket Server Port
+WS_PORT=8080
 
-## Environment Variables
+# AWS Credentials
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=your_aws_region
 
-- **REDIS_URL:** Connection string for your Redis instance.
-- **WS_PORT:** Port on which the WebSocket server runs.
-- **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION:** Credentials for AWS Rekognition.
-- **GOOGLE_SPEECH_API_KEY:** API key for the Google Speech-to-Text service.
+# Google Speech-to-Text API Key
+GOOGLE_SPEECH_API_KEY=your_google_api_key
 
-## Usage
+# Additional configurations as needed...
 
-1. **User Registration:**
-   - Sign up with your name, email, and password.
-   - Grant camera access to capture a selfie.
-   - The captured image is processed via AWS Rekognition for future verification.
 
-2. **User Login:**
-   - Enter your username and password.
-   - A new real-time selfie is captured and matched against the stored image.
-   - On successful verification, you are directed to the main dashboard.
+Start the Application:
 
-3. **Chat Rooms & Messaging:**
-   - Create a new chat room and invite members via email.
-   - Upon invitation acceptance, join the chat room.
-   - Send messages as text or record audio that is transcribed into text.
+For Development:
 
-4. **Real-Time Updates:**
-   - WebSocket events manage user identification, joining rooms, and live message broadcasting.
-   - Redis ensures message persistency and quick access to recent chat history.
+npm run dev
+# or
+yarn dev
 
-## WebSocket Server Details
 
-The WebSocket server (located in `websocket-server/server.js`) handles the following:
+For Production Build:
 
-- **User Identification:**  
-  On connection, the client sends an "identify" event which maps the user ID to the active WebSocket connection.
+npm run build
+npm start
+# or equivalent yarn commands
 
-- **Room Joining:**  
-  The "join-room" event assigns the user to a chat room. The server stores this information in Redis for persistence and logs room participation.
+Environment Variables
+REDIS_URL: Connection string for your Redis instance
+WS_PORT: Port on which the WebSocket server runs
+AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION: Credentials for AWS Rekognition
+GOOGLE_SPEECH_API_KEY: API key for the Google Speech-to-Text service
+Usage
 
-- **Chat Messaging:**  
-  The "chat-message" event broadcasts messages to all participants in the room. Each message is stamped with a unique ID and a timestamp before broadcasting.
+User Registration:
+
+Sign up with your name, email, and password
+Grant camera access to capture a selfie
+The captured image is processed via AWS Rekognition for future verification
+
+User Login:
+
+Enter your username and password
+A new real-time selfie is captured and matched against the stored image
+On successful verification, you are directed to the main dashboard
+
+Chat Rooms & Messaging:
+
+Create a new chat room and invite members via email
+Upon invitation acceptance, join the chat room
+Send messages as text or record audio that is transcribed into text
+
+Real-Time Updates:
+
+WebSocket events manage user identification, joining rooms, and live message broadcasting
+Redis ensures message persistency and quick access to recent chat history
+WebSocket Server Details
+
+The WebSocket server (located in websocket-server/server.js) handles the following:
+
+User Identification: On connection, the client sends an "identify" event which maps the user ID to the active WebSocket connection.
+
+Room Joining: The "join-room" event assigns the user to a chat room. The server stores this information in Redis for persistence and logs room participation.
+
+Chat Messaging: The "chat-message" event broadcasts messages to all participants in the room. Each message is stamped with a unique ID and a timestamp before broadcasting.
 
 The server also includes robust logging and error handling to monitor client connections, message flows, and Redis operations.
 
-## API Endpoints & Routes
+API Endpoints & Routes
 
-- **User Authentication:**
-  - `POST /api/signup` – Handles user registration, including face capture and storage.
-  - `POST /api/login` – Handles login by verifying credentials and live face capture.
+User Authentication:
 
-- **Chat Room Management:**
-  - `POST /api/chat/create` – Creates a new chat room.
-  - `POST /api/chat/invite` – Sends an invitation email to join a chat room.
-  - `GET /api/chat/messages` – Retrieves past chat messages from the database (Redis).
+POST /api/signup – Handles user registration, including face capture and storage
+POST /api/login – Handles login by verifying credentials and live face capture
 
-- **Speech-to-Text:**
-  - `POST /api/speech/convert` – Converts recorded audio to text using the Google Speech-to-Text API.
+Chat Room Management:
 
+POST /api/chat/create – Creates a new chat room
+POST /api/chat/invite – Sends an invitation email to join a chat room
+GET /api/chat/messages – Retrieves past chat messages from the database (Redis)
 
-## Deployment
+Speech-to-Text:
 
-- **Frontend:**  
-  Deployed on Vercel, leveraging Next.js for seamless SSR and API routes.
+POST /api/speech/convert – Converts recorded audio to text using the Google Speech-to-Text API
+Deployment
 
-- **Backend WebSocket Server:**  
-  Can be deployed on a Node.js hosting service or alongside the frontend if architecture permits. Ensure the WS_PORT and other environment variables are correctly set.
+Frontend: Deployed on Vercel, leveraging Next.js for seamless SSR and API routes
 
-## Future Enhancements
+Backend WebSocket Server: Can be deployed on a Node.js hosting service or alongside the frontend if architecture permits. Ensure the WS_PORT and other environment variables are correctly set
 
-- **Enhanced UI/UX:**  
-  Implement responsive design and advanced chat features like file sharing and notifications.
+Future Enhancements
 
-- **Improved Security:**  
-  Add multi-factor authentication and more rigorous logging for face recognition processes.
+Enhanced UI/UX: Implement responsive design and advanced chat features like file sharing and notifications
 
-- **Analytics & Monitoring:**  
-  Integrate real-time analytics for chat activities and performance monitoring for the WebSocket server.
+Improved Security: Add multi-factor authentication and more rigorous logging for face recognition processes
 
-- **Mobile Support:**  
-  Develop native mobile applications using React Native or Flutter.
+Analytics & Monitoring: Integrate real-time analytics for chat activities and performance monitoring for the WebSocket server
 
-## Contributing
+Mobile Support: Develop native mobile applications using React Native or Flutter
+
+Contributing
 
 Contributions are welcome! To contribute:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -m 'Add feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a Pull Request.
+Fork the repository
+Create a new branch (git checkout -b feature/YourFeature)
+Commit your changes (git commit -m 'Add feature')
+Push to the branch (git push origin feature/YourFeature)
+Open a Pull Request
 
 Please adhere to the established coding conventions and include relevant tests.
 
-## License
+License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
-## Contact
+Contact
 
-For any questions or feedback, please reach out at swarnikarajsingh@gmail.com (mailto:swarnikarajsingh@gmail.com).
-
----
-
-Happy coding!
-```
-
----
+For any questions or feedback, please reach out at swarnikarajsingh@gmail.com.
